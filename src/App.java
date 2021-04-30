@@ -1,10 +1,14 @@
 import javax.swing.*;
 import java.awt.*;
 
+
+
 public class App extends JFrame{
     App(){
         // set default window size
         setSize(1280, 720);
+        // exit the java program when this window is closed.
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         // initialize root UI components such as NavigationPane.
         initUI();
         // show the window.
@@ -15,10 +19,6 @@ public class App extends JFrame{
         // use BorderLayout so that we can easily dock the nav pane on the left
         // and have the view container use the rest of the space.
         setLayout(new BorderLayout());
-
-        // exit the java program when this window is closed.
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
         // a panel used to hosts each view.
         JPanel viewContainer = new JPanel();
 
