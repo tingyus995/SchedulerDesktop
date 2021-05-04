@@ -28,7 +28,7 @@ public class NavigationPaneController implements Controller{
         // handle click events from NavigationItem.
         navItem.addMouseListener(new MouseAdapter() {
             @Override
-            public void mouseClicked(MouseEvent e) {
+            public void mouseReleased(MouseEvent e) {
                 view.setActiveItem(navItem);
                 cardLayout.show(container, name);
             }

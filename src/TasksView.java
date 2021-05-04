@@ -1,31 +1,61 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Date;
+
 
 public class TasksView extends JPanel {
     private JPanel taskList;
+    private JPanel actionBar;
+    protected VerticalIconButton createAction;
 
     TasksView() {
         super();
         setLayout(new BorderLayout());
-        // create 10px margin
-        setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         setBackground(Color.WHITE);
-        JScrollPane scrollPane = new JScrollPane();
-        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+
+        // action bar
+        actionBar = new JPanel();
+        actionBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        actionBar.setBackground(Color.WHITE);
+        createAction = new VerticalIconButton("Create", "assets\\add-file.png");
+        actionBar.add(createAction);
+
+        // task list
         taskList = new JPanel();
+        // create 10px margin
+        taskList.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         taskList.setBackground(Color.WHITE);
         taskList.setLayout(new BoxLayout(taskList, BoxLayout.Y_AXIS));
+        JScrollPane scrollPane = new JScrollPane();
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setViewportView(taskList);
         add(scrollPane, BorderLayout.CENTER);
+
+
+
+
+        add(actionBar, BorderLayout.NORTH);
     }
+
+
 
     void addTask(Task task) {
         taskList.add(new TaskItem(task));
         // vertical 10px padding
         taskList.add(Box.createRigidArea(new Dimension(0, 10)));
+    }
+
+    void insertTask(Task task){
+        // vertical 10px padding
+        taskList.add(Box.createRigidArea(new Dimension(0, 10)), 0);
+
+        taskList.add(new TaskItem(task), 0);
+
+        taskList.revalidate();
+        taskList.repaint();
     }
 }
 

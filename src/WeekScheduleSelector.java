@@ -49,6 +49,7 @@ public class WeekScheduleSelector extends JPanel {
         int slots = (endTime - startTime) / delta;
 
         setLayout(new GridLayout(slots, 8, 3, 3));
+        setBackground(Color.WHITE);
         int row;
         int col;
         int day;
@@ -71,7 +72,7 @@ public class WeekScheduleSelector extends JPanel {
                         ToggleButton btn = new ToggleButton();
                         btn.addMouseListener(new MouseAdapter() {
                             @Override
-                            public void mouseClicked(MouseEvent e) {
+                            public void mouseReleased(MouseEvent e) {
                                 super.mouseClicked(e);
                                 btn.setState(!btn.getState());
                             }

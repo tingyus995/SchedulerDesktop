@@ -32,6 +32,7 @@ class ThemeColors{
     }
     static Color accent = new Color(233, 29, 99);
     static Color accent_light = lighten(accent, 30);
+    static Color background = new Color(255, 255, 255);
     static Color urgent_important_bg = new Color(244,204,204);
     static Color urgent_unimportant_bg = new Color(252,229,205);
     static Color non_urgent_important_bg = new Color(217,234,211);
