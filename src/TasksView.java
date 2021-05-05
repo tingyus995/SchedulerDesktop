@@ -260,17 +260,17 @@ class TaskItem extends JPanel {
         hours = (int) durationSeconds / 3600;
         if (hours > 0)
             if (hours == 1)
-                output.append(days + " hour ");
+                output.append(hours + " hour ");
             else
-                output.append(days + " hours ");
+                output.append(hours + " hours ");
         durationSeconds %= 3600;
 
         minutes = (int) durationSeconds / 60;
         if (minutes > 0)
             if (minutes == 1)
-                output.append(days + " minute");
+                output.append(minutes + " minute");
             else
-                output.append(days + " minutes");
+                output.append(minutes + " minutes");
 
 
         if (output.length() == 0)
