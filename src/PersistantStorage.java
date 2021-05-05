@@ -10,7 +10,7 @@ public class PersistantStorage {
 
 class Schema implements Serializable {
 
-    static String rootDir;
+    String rootDir;
     String filename;
 
     void setFileName(String filename){
@@ -44,6 +44,19 @@ class Schema implements Serializable {
         }
     }
 
+    void delete(){
+        if(filename != null){
+            Path fullPath = Paths.get(rootDir, filename);
+
+            try {
+                Files.delete(fullPath);
+
+            } catch (IOException i) {
+                i.printStackTrace();
+            }
+        }
+    }
+
     void remove(){
         if(filename == null) return;
         try {
@@ -74,7 +87,9 @@ class Schema implements Serializable {
         try {
             Files.list(new File(rootDir).toPath()).forEach(path -> {
                 T  t = Schema.load(path.toString());
-                result.add(t);
+                if(t != null){
+                    result.add(t);
+                }
             });
         }catch (IOException e){
             e.printStackTrace();

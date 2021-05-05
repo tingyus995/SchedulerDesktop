@@ -64,6 +64,11 @@ public class App extends JFrame{
     }
 
     public static void main(String[] args) {
-        App app = App.getInstance();
+        System.out.println(SwingUtilities.isEventDispatchThread());
+        SwingUtilities.invokeLater(() -> {
+            System.out.println(SwingUtilities.isEventDispatchThread());
+            App app = App.getInstance();
+        });
+
     }
 }

@@ -26,3 +26,7 @@ hs_err_pid*
 .idea/
 out/
 *.iml
+
+# db
+db/tasks/*
+!db/tasks/.gitkeep

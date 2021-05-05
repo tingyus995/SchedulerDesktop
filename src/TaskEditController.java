@@ -16,7 +16,7 @@ public class TaskEditController implements Controller{
         view.dateChooseBtn.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                LocalDate date = Utils.showDateChooserDialog(LocalDate.of(2000,10, 1), LocalDate.now());
+                LocalDate date = Utils.showDateChooserDialog(LocalDate.now(), LocalDate.of(3000,1,1));
                 setDate(date);
             }
         });

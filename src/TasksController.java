@@ -7,35 +7,61 @@ import java.util.ArrayList;
 public class TasksController implements Controller{
     TasksView view;
 
+
+
     TasksController(){
 
         view = new TasksView();
 
+
         ArrayList<Task> tasks = Schema.getAll("db/tasks");
 
+
+
+
+
         for(Task t : tasks){
-            view.addTask(t);
+            TaskItem item = view.addTask(t);
+            listenTaskItem(item);
         }
-
-
-//        view.addTask(new Task("Do homework", LocalDateTime.now(), 60, Task.TaskType.URGENT_IMPORTANT));
-//        view.addTask(new Task("Prepare for exam", LocalDateTime.of(2021,5,14,22,38), 120, Task.TaskType.NON_URGENT_IMPORTANT));
-//        view.addTask(new Task("Learn Blender", LocalDateTime.of(2021,7,14,22,38), 80, Task.TaskType.NON_URGENT_UNIMPORTANT));
-
 
         view.createAction.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
-                Task t = Utils.showTaskEditDialog(null);
+                Task task = Utils.showTaskEditDialog(null);
+                TaskItem item = view.insertTask(task);
+                listenTaskItem(item);
+            }
+        });
+    }
 
-                if(t != null){
-                    System.out.println(t.getName());
-                    view.insertTask(t);
-                }
+    private void listenTaskItem(TaskItem item){
+        item.editButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                handleEditButton(item);
+
             }
         });
 
+        item.deleteButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                handleDeleteButton(item);
+            }
+        });
+    }
 
+    private void handleDeleteButton(TaskItem item){
+        Task task = item.getTask();
+        task.delete();
+        view.removeTask(item);
+    }
+
+    private void handleEditButton(TaskItem item){
+        Task task = item.getTask();
+        Utils.showTaskEditDialog(task);
+        item.updateData();
     }
     @Override
     public JPanel getView() {
