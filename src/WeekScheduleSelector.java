@@ -10,7 +10,7 @@ class ToggleButton extends JPanel{
         state = false;
         setMinimumSize(new Dimension(50, 30));
         setBackground(Color.white);
-        setBorder(BorderFactory.createLineBorder(ThemeColors.accent));
+        setBorder(BorderFactory.createLineBorder(ThemeColors.accent, 2));
     }
     
     void setState(boolean state){
@@ -36,6 +36,7 @@ public class WeekScheduleSelector extends JPanel {
     private int startTime;
     private int endTime;
     private int delta;
+    private boolean dragSelect;
 
 
     WeekScheduleSelector(){
@@ -44,6 +45,7 @@ public class WeekScheduleSelector extends JPanel {
         startTime = 0;
         endTime = 1440;
         delta = 15;
+        dragSelect = true;
         // this should also be the number of rows required since we should add one row for the header and minus one due
         // to "tree-planting problem"
         int slots = (endTime - startTime) / delta;
@@ -72,7 +74,7 @@ public class WeekScheduleSelector extends JPanel {
                         ToggleButton btn = new ToggleButton();
                         btn.addMouseListener(new MouseAdapter() {
                             @Override
-                            public void mouseReleased(MouseEvent e) {
+                            public void mousePressed(MouseEvent e) {
                                 super.mouseClicked(e);
                                 btn.setState(!btn.getState());
                             }
@@ -80,8 +82,7 @@ public class WeekScheduleSelector extends JPanel {
                             @Override
                             public void mouseEntered(MouseEvent e) {
                                 //System.out.println("Mouse entered!");
-
-                                if(SwingUtilities.isLeftMouseButton(e)){
+                                if(dragSelect && SwingUtilities.isLeftMouseButton(e)){
                                     btn.setState(!btn.getState());
                                 }
                             }
@@ -101,5 +102,9 @@ public class WeekScheduleSelector extends JPanel {
         seconds = minutes % 60;
 
         return String.format("%02d:%02d", hours, seconds);
+    }
+
+    public void setDragSelect(boolean enable){
+        dragSelect = enable;
     }
 }
