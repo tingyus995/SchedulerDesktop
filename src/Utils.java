@@ -4,6 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -86,6 +87,26 @@ class Utils{
         // show dialog
         dialog.setVisible(true);
         return task;
+    }
+
+    public static int dayToColumnNumber(DayOfWeek day) {
+        switch (day) {
+            case SUNDAY:
+                return 0;
+            case MONDAY:
+                return 1;
+            case TUESDAY:
+                return 2;
+            case WEDNESDAY:
+                return 3;
+            case THURSDAY:
+                return 4;
+            case FRIDAY:
+                return 5;
+            case SATURDAY:
+                return 6;
+        }
+        return 0;
     }
 }
 

@@ -86,9 +86,11 @@ class Schema implements Serializable {
         ArrayList<T> result = new ArrayList<T>();
         try {
             Files.list(new File(rootDir).toPath()).forEach(path -> {
-                T  t = Schema.load(path.toString());
-                if(t != null){
-                    result.add(t);
+                if(!path.getFileName().toString().startsWith(".")) {
+                    T t = Schema.load(path.toString());
+                    if (t != null) {
+                        result.add(t);
+                    }
                 }
             });
         }catch (IOException e){

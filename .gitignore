@@ -30,3 +30,5 @@ out/
 # db
 db/tasks/*
 !db/tasks/.gitkeep
+db/blocks/*
+!db/blocks/.gitkeep

@@ -162,7 +162,7 @@ public class DateChooser extends JPanel {
 
         LocalDate date = LocalDate.of(getYear(), getMonth(), 1);
         DayOfWeek day = date.getDayOfWeek();
-        int beginCol = dayToColumnNumber(day);
+        int beginCol = Utils.dayToColumnNumber(day);
         int lengthOfMonth = YearMonth.of(date.getYear(), date.getMonth()).lengthOfMonth();
 
         // estimate the amount of rows required
@@ -208,25 +208,7 @@ public class DateChooser extends JPanel {
         calendar.revalidate();
     }
 
-    private int dayToColumnNumber(DayOfWeek day) {
-        switch (day) {
-            case SUNDAY:
-                return 0;
-            case MONDAY:
-                return 1;
-            case TUESDAY:
-                return 2;
-            case WEDNESDAY:
-                return 3;
-            case THURSDAY:
-                return 4;
-            case FRIDAY:
-                return 5;
-            case SATURDAY:
-                return 6;
-        }
-        return 0;
-    }
+
 }
 
 class LabelItem extends JPanel {
