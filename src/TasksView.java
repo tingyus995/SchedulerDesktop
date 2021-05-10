@@ -209,6 +209,10 @@ class TaskItem extends JPanel {
 
     }
 
+    JPanel getContent(){
+        return content;
+    }
+
     public void updateData(){
         // set background based on type
         Color backgroundColor = Color.GRAY;

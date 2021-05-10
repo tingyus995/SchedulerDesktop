@@ -6,7 +6,7 @@ import java.security.InvalidParameterException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.Spliterators;
+import java.util.ArrayList;
 
 public class TimeBlockView extends JPanel {
     JPanel controlPane;
@@ -89,6 +89,7 @@ class TimeBlock extends Schema {
     private LocalDate date;
     private LocalTime begin;
     private LocalTime end;
+    private ArrayList<String> taskIds;
 
     TimeBlock(LocalDate date, LocalTime begin, LocalTime end){
         int cmp = begin.compareTo(end);
@@ -103,6 +104,7 @@ class TimeBlock extends Schema {
         this.date = date;
         this.begin = begin;
         this.end = end;
+        taskIds = new ArrayList<>();
     }
 
     public LocalDate getDate() {
