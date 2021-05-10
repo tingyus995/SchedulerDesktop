@@ -107,6 +107,7 @@ class ScheduledTaskList extends JPanel{
                     ScheduledTaskItem item = (ScheduledTaskItem) context.getComponent();
                     // remove from this pane
                     remove(item);
+                    revalidate();
                 }
             }
         };
