@@ -108,6 +108,14 @@ class Utils{
         }
         return 0;
     }
+
+    public static Component findParent(Component current, Class type){
+
+        while(!(type.isInstance(current))){
+            current = current.getParent();
+        }
+        return current;
+    }
 }
 
 class Spacer extends JPanel {

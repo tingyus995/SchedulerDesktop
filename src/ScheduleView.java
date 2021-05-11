@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.LocalDateTime;
-
+import java.util.Random;
 
 
 public class ScheduleView extends JPanel {
@@ -41,13 +41,15 @@ public class ScheduleView extends JPanel {
             System.out.println(block.getDate().toString());
         }
 
+        Random random = new Random();
+
         scheduleAction.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseReleased(MouseEvent e) {
                 for(Component c : mContent.getComponents()){
                     if(c instanceof TimeBlockItem){
                         TimeBlockItem item = (TimeBlockItem) c;
-                        item.addTask(new Task("Abc", LocalDateTime.now(), 80, Task.TaskType.NON_URGENT_IMPORTANT));
+                        item.addTask(new Task("Abc" + random.nextInt(50), LocalDateTime.now(), 80, Task.TaskType.NON_URGENT_IMPORTANT));
                     }
                 }
             }
@@ -55,6 +57,8 @@ public class ScheduleView extends JPanel {
 
         add(actionBar, BorderLayout.NORTH);
         add(mContent, BorderLayout.CENTER);
+
+
 
 
 
@@ -97,11 +101,15 @@ class ScheduledTaskItem extends TaskItem implements Transferable, DragGestureLis
     private DragSource dragSource;
     public static final DataFlavor DATA_FLAVOR = new DataFlavor(Task.class, "Task");
 
-    ScheduledTaskItem(Task task, DragSourceListener dragSourceListener) {
+    ScheduledTaskItem(Task task) {
         super(task);
         dragSource = new DragSource();
-        dragSource.addDragSourceListener(dragSourceListener);
+        //dragSource.addDragSourceListener(dragSourceListener);
         dragSource.createDefaultDragGestureRecognizer(this, DnDConstants.ACTION_MOVE, this);
+    }
+
+    public void addDragSourceListener(DragSourceListener listener){
+        dragSource.addDragSourceListener(listener);
     }
 
     @Override
@@ -136,14 +144,21 @@ class ScheduledTaskItem extends TaskItem implements Transferable, DragGestureLis
 
 
         dge.startDrag(DragSource.DefaultMoveDrop, this);
-        view.setDragCursorImage(img, dragSource);
+        view.setDragCursorImage(img, dge.getDragSource());
     }
 }
 
 class ScheduledTaskList extends JPanel{
     private DragSourceListener dragSourceListener;
+    private DropTargetListener dropTargetListener;
+    private DropTarget dropTarget;
+    private Point dropLocation;
+    private int targetIndex;
     ScheduledTaskList(){
         super();
+        setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        targetIndex = 0;
+
         dragSourceListener = new DragSourceAdapter() {
             @Override
             public void dragDropEnd(DragSourceDropEvent event) {
@@ -158,10 +173,112 @@ class ScheduledTaskList extends JPanel{
         };
 
 
+
+        dropTargetListener = new DropTargetAdapter() {
+
+            @Override
+            public void dragEnter(DropTargetDragEvent dtde) {
+
+            }
+
+            @Override
+            public void dragOver(DropTargetDragEvent event) {
+                Point newDropLocation = event.getLocation();
+                if(dropLocation == null || !(dropLocation.equals(newDropLocation))){
+                    dropLocation = newDropLocation;
+                    repaint();
+
+                    ScheduleView view = (ScheduleView) Utils.findParent(ScheduledTaskList.this, ScheduleView.class);
+                    view.repaint();
+                }
+            }
+
+            @Override
+            public void dropActionChanged(DropTargetDragEvent dtde) {
+
+            }
+
+            @Override
+            public void dragExit(DropTargetEvent dte) {
+                dropLocation = null;
+            }
+
+            @Override
+            public void drop(DropTargetDropEvent event) {
+                dropLocation = null;
+                Transferable transferable = event.getTransferable();
+
+                try {
+                    Task task = (Task) transferable.getTransferData(ScheduledTaskItem.DATA_FLAVOR);
+                    addTask(task, targetIndex);
+                    event.acceptDrop(DnDConstants.ACTION_MOVE);
+                    event.dropComplete(true);
+
+                } catch (UnsupportedFlavorException | IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
+            }
+        };
+
+        dropTarget = new DropTarget(this, dropTargetListener);
+
+
+    }
+
+    int findClosetComponent(Point point, Class type){
+
+        int closetIdx = -1;
+        double minDist = Integer.MAX_VALUE;
+        double dist;
+
+        Component[] components = getComponents();
+        for(int i = 0; i < components.length; ++i){
+            Component component = components[i];
+            if(type.isInstance(component)){
+                dist = component.getLocation().distance(point);
+                if(dist < minDist){
+                    minDist = dist;
+                    closetIdx = i;
+                }
+            }
+        }
+
+        return closetIdx;
+    }
+
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+        if(dropLocation != null){
+            int index = findClosetComponent(dropLocation, ScheduledTaskItem.class);
+            Component closet = getComponent(index);
+            int threshY = closet.getY() + closet.getHeight() / 2;
+
+            g.setColor(Color.DARK_GRAY);
+            if(dropLocation.getY() <= threshY){
+                g.fillRect(0, closet.getY(), getWidth(), 5);
+                targetIndex = index;
+            }else{
+                g.fillRect(0, closet.getY() + closet.getHeight(), getWidth(), 5);
+                targetIndex = index + 1;
+            }
+        }
     }
 
     void addTask(Task t){
-        add(new ScheduledTaskItem(t, dragSourceListener));
+        ScheduledTaskItem item = new ScheduledTaskItem(t);
+        add(item);
+        item.addDragSourceListener(dragSourceListener);
+        revalidate();
+    }
+
+    void addTask(Task t, int index){
+        ScheduledTaskItem item = new ScheduledTaskItem(t);
+        add(item, index);
+        item.addDragSourceListener(dragSourceListener);
         revalidate();
     }
 
