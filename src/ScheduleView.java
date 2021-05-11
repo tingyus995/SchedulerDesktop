@@ -6,6 +6,7 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.time.LocalDateTime;
 
@@ -14,7 +15,9 @@ import java.time.LocalDateTime;
 public class ScheduleView extends JPanel {
     private JPanel mContent;
     private JPanel actionBar;
+    private BufferedImage cursorImg;
     protected VerticalIconButton scheduleAction;
+
     ScheduleView(){
         super();
         setLayout(new BorderLayout());
@@ -55,10 +58,38 @@ public class ScheduleView extends JPanel {
 
 
 
+    }
 
+    void setDragCursorImage(BufferedImage img, DragSource source){
+        source.addDragSourceMotionListener(new DragSourceAdapter() {
+            @Override
+            public void dragMouseMoved(DragSourceDragEvent dsde) {
+                repaint();
+            }
+        });
+
+        source.addDragSourceListener(new DragSourceAdapter() {
+            @Override
+            public void dragDropEnd(DragSourceDropEvent dsde) {
+                cursorImg = null;
+                repaint();
+            }
+        });
+
+
+        cursorImg = img;
     }
 
 
+    @Override
+    public void paint(Graphics g) {
+        super.paint(g);
+
+        if(cursorImg != null){
+            Point loc = getMousePosition();
+            g.drawImage(cursorImg, loc.x, loc.y, null);
+        }
+    }
 }
 
 class ScheduledTaskItem extends TaskItem implements Transferable, DragGestureListener {
@@ -91,7 +122,21 @@ class ScheduledTaskItem extends TaskItem implements Transferable, DragGestureLis
     @Override
     public void dragGestureRecognized(DragGestureEvent dge) {
         System.out.println("Drag gesture recognized!");
-        dge.startDrag(DragSource.DefaultCopyDrop, this);
+        BufferedImage img = new BufferedImage(getWidth(), getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = img.createGraphics();
+        paint(g2d);
+        g2d.dispose();
+
+        Component parent = this;
+        while(!(parent instanceof ScheduleView)){
+            parent = parent.getParent();
+        }
+        ScheduleView view = (ScheduleView) parent;
+
+
+
+        dge.startDrag(DragSource.DefaultMoveDrop, this);
+        view.setDragCursorImage(img, dragSource);
     }
 }
 
