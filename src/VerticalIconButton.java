@@ -31,7 +31,7 @@ public class VerticalIconButton extends JPanel {
             System.out.println(e);
         }
 
-        nameLabel = new JLabel(name);
+        nameLabel = new JLabel(name, SwingConstants.CENTER);
         add(nameLabel, BorderLayout.SOUTH);
 
         addMouseListener(new MouseAdapter() {

@@ -96,6 +96,7 @@ public class ScheduleView extends JPanel {
     }
 }
 
+
 class ScheduledTaskItem extends TaskItem implements Transferable, DragGestureListener {
 
     private DragSource dragSource;
@@ -152,12 +153,14 @@ class ScheduledTaskList extends JPanel{
     private DragSourceListener dragSourceListener;
     private DropTargetListener dropTargetListener;
     private DropTarget dropTarget;
+    private int taskCount;
     private Point dropLocation;
     private int targetIndex;
     ScheduledTaskList(){
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         targetIndex = 0;
+        taskCount = 0;
 
         dragSourceListener = new DragSourceAdapter() {
             @Override
@@ -285,6 +288,7 @@ class ScheduledTaskList extends JPanel{
 
 }
 
+
 class TimeBlockItem extends JPanel implements DropTargetListener{
     private TimeBlock mTimeBlock;
     private JPanel mContent;
@@ -299,6 +303,8 @@ class TimeBlockItem extends JPanel implements DropTargetListener{
         super();
         mTimeBlock = timeBlock;
         dropTarget = new DropTarget(this, DnDConstants.ACTION_MOVE, this);
+
+
         hoverByTask = false;
 
 
@@ -324,12 +330,14 @@ class TimeBlockItem extends JPanel implements DropTargetListener{
 
         mTaskList = new ScheduledTaskList();
         mTaskList.setOpaque(false);
-        mContent.add(mTaskList);
+        mContent.add(mTaskList, BorderLayout.CENTER);
 
 
 
 
-
+        VerticalIconButton hint = new VerticalIconButton("Drag task here","assets/collapse-plus.png");
+        hint.setOpaque(false);
+        mContent.add(hint, BorderLayout.SOUTH);
 
 
         add(mContent, BorderLayout.CENTER);
