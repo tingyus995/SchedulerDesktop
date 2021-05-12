@@ -116,6 +116,18 @@ class Utils{
         }
         return current;
     }
+
+    public static TimeBlock[] scheduleAlgorithm(){
+        TimeBlock[] blocks = TimeBlockModel.getAll();
+        Task[] tasks = TaskModel.getAll();
+
+        for(Task task : tasks){
+            blocks[0].addTask(task);
+        }
+
+        //blocks[0].save();
+        return blocks;
+    }
 }
 
 class Spacer extends JPanel {

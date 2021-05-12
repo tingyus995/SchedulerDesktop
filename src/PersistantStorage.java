@@ -57,6 +57,10 @@ class Schema implements Serializable {
         }
     }
 
+    public String getID(){
+        return filename;
+    }
+
     void remove(){
         if(filename == null) return;
         try {

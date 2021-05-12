@@ -1,3 +1,4 @@
+import javax.rmi.CORBA.Util;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
@@ -34,7 +35,8 @@ public class ScheduleView extends JPanel {
         mContent = new JPanel();
         mContent.setOpaque(false);
         mContent.setLayout(new FlowLayout());
-        TimeBlock[] blocks = TimeBlockModel.getAll();
+        //TimeBlock[] blocks = TimeBlockModel.getAll();
+        TimeBlock[] blocks = Utils.scheduleAlgorithm();
         for(TimeBlock block : blocks){
             TimeBlockItem item = new TimeBlockItem(block);
             mContent.add(item);
@@ -369,6 +371,10 @@ class TimeBlockItem extends JPanel implements DropTargetListener{
         dateLabel.setText(mTimeBlock.getDate().toString());
         timeLabel.setText(mTimeBlock.getBegin().toString() + "~" + mTimeBlock.getEnd());
         setHoverByTask(false);
+
+        for(Task task : mTimeBlock.getTasks()){
+            addTask(task);
+        }
     }
 
     @Override

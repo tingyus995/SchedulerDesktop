@@ -107,6 +107,19 @@ class TimeBlock extends Schema {
         taskIds = new ArrayList<>();
     }
 
+    public void addTask(Task t){
+        taskIds.add(t.getID());
+    }
+
+    public Task[] getTasks(){
+        ArrayList<Task> tasks = new ArrayList<>();
+        for(String id : taskIds){
+            Task task = TaskModel.getById(id);
+            tasks.add(task);
+        }
+        return tasks.toArray(new Task[0]);
+    }
+
     public LocalDate getDate() {
         return date;
     }
