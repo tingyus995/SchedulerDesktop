@@ -1,23 +1,18 @@
-import javax.rmi.CORBA.Util;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.Transferable;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.time.LocalDateTime;
-import java.util.Random;
 
 
-public class ScheduleView extends JPanel {
+public class ScheduleView extends JPanel{
     private JPanel mContent;
-    private JPanel actionBar;
-    private BufferedImage cursorImg;
-    protected VerticalIconButton scheduleAction;
+    private JPanel mActionBar;
+    private BufferedImage mCursorImg;
+    protected VerticalIconButton mScheduleAction;
 
     ScheduleView(){
         super();
@@ -26,44 +21,42 @@ public class ScheduleView extends JPanel {
         setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         // action bar
-        actionBar = new JPanel();
-        actionBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        actionBar.setBackground(Color.WHITE);
-        scheduleAction = new VerticalIconButton("Schedule", "assets\\daily-schedule.png");
-        actionBar.add(scheduleAction);
+        mActionBar = new JPanel();
+        mActionBar.setLayout(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        mActionBar.setBackground(Color.WHITE);
+        mScheduleAction = new VerticalIconButton("Schedule", "assets\\daily-schedule.png");
+        mActionBar.add(mScheduleAction);
 
         mContent = new JPanel();
         mContent.setOpaque(false);
         mContent.setLayout(new FlowLayout());
-        //TimeBlock[] blocks = TimeBlockModel.getAll();
-        TimeBlock[] blocks = Utils.scheduleAlgorithm();
-        for(TimeBlock block : blocks){
-            TimeBlockItem item = new TimeBlockItem(block);
-            mContent.add(item);
-            System.out.println(block.getDate().toString());
-        }
 
-        Random random = new Random();
 
-        scheduleAction.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                for(Component c : mContent.getComponents()){
-                    if(c instanceof TimeBlockItem){
-                        TimeBlockItem item = (TimeBlockItem) c;
-                        item.addTask(new Task("Abc" + random.nextInt(50), LocalDateTime.now(), 80, Task.TaskType.NON_URGENT_IMPORTANT));
-                    }
-                }
-            }
-        });
 
-        add(actionBar, BorderLayout.NORTH);
+
+        add(mActionBar, BorderLayout.NORTH);
         add(mContent, BorderLayout.CENTER);
 
 
 
 
 
+    }
+
+    void addTimeBlock(TimeBlock block){
+        mContent.add(new TimeBlockItem(block));
+        revalidate();
+    }
+
+    void removeAllTimeBlocks(){
+        for(Component c : mContent.getComponents()){
+            if(c instanceof TimeBlockItem){
+                mContent.remove(c);
+            }
+        }
+
+        mContent.revalidate();
+        mContent.repaint();
     }
 
     void setDragCursorImage(BufferedImage img, DragSource source){
@@ -77,13 +70,13 @@ public class ScheduleView extends JPanel {
         source.addDragSourceListener(new DragSourceAdapter() {
             @Override
             public void dragDropEnd(DragSourceDropEvent dsde) {
-                cursorImg = null;
+                mCursorImg = null;
                 repaint();
             }
         });
 
 
-        cursorImg = img;
+        mCursorImg = img;
     }
 
 
@@ -91,10 +84,25 @@ public class ScheduleView extends JPanel {
     public void paint(Graphics g) {
         super.paint(g);
 
-        if(cursorImg != null){
+        if(mCursorImg != null){
             Point loc = getMousePosition();
-            g.drawImage(cursorImg, loc.x, loc.y, null);
+            g.drawImage(mCursorImg, loc.x, loc.y, null);
         }
+    }
+
+    // getters and setters
+
+
+    public JPanel getContent() {
+        return mContent;
+    }
+
+    public JPanel getActionBar() {
+        return mActionBar;
+    }
+
+    public VerticalIconButton getScheduleAction() {
+        return mScheduleAction;
     }
 }
 

@@ -120,6 +120,10 @@ class TimeBlock extends Schema {
         return tasks.toArray(new Task[0]);
     }
 
+    public void clearTasks(){
+        taskIds.clear();
+    }
+
     public LocalDate getDate() {
         return date;
     }

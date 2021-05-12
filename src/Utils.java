@@ -125,7 +125,7 @@ class Utils{
             blocks[0].addTask(task);
         }
 
-        //blocks[0].save();
+        blocks[0].save();
         return blocks;
     }
 }

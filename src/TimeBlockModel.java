@@ -10,6 +10,14 @@ public class TimeBlockModel {
         return blocks.toArray(new TimeBlock[0]);
     }
 
+    public static void removeAllTasks(){
+        TimeBlock[] blocks = getAll();
+        for(TimeBlock block : blocks){
+            block.clearTasks();
+            block.save();
+        }
+    }
+
     public static TimeBlock[] getWeekTimeBlocks(Week week){
         ArrayList<TimeBlock> result = new ArrayList<>();
         TimeBlock[] allBlocks = getAll();

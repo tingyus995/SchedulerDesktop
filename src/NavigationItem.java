@@ -59,4 +59,8 @@ class NavigationItem extends JPanel{
             activeIndicator.setBackground(ThemeColors.accent);
         }
     }
+
+    public String getLabelNameText(){
+        return labelName.getText();
+    }
 }
