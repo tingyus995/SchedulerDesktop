@@ -39,6 +39,8 @@ public class ScheduleController implements Controller, BeforeShowEventListener{
             view.addTimeBlock(block);
             System.out.println(block.getDate().toString());
         }
+        Task[] tasks = TaskModel.getAll();
+        view.updateNotScheduledTaskList(blocks, tasks);
     }
     @Override
     public JPanel getView() {
