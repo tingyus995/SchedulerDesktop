@@ -5,6 +5,8 @@ import java.awt.event.MouseEvent;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import static java.lang.Math.abs;
+
 
 public class TasksView extends JPanel {
     private TaskList taskList;
@@ -238,8 +240,13 @@ class TaskItem extends JPanel {
         timeRequiredLabel.setText(task.getTimeRequired() + " minutes");
 
         Duration d = Duration.between(LocalDateTime.now(), task.getDueTime());
-        timeLeftLabel.setText(formatDuration(d) + " left");
-
+        if (d.getSeconds() < 0){
+            timeLeftLabel.setText("Overdue by " + formatDuration(d));
+            timeLeftLabel.setForeground(ThemeColors.text_warning);
+        }else{
+            timeLeftLabel.setText(formatDuration(d) + " left");
+            timeLeftLabel.setForeground(ThemeColors.text);
+        }
     }
 
     public Task getTask(){
@@ -250,7 +257,7 @@ class TaskItem extends JPanel {
         long days;
         int hours;
         int minutes;
-        long durationSeconds = d.getSeconds();
+        long durationSeconds = abs(d.getSeconds());
         StringBuffer output = new StringBuffer();
 
         days = durationSeconds / 86400;

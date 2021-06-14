@@ -39,6 +39,8 @@ class ThemeColors{
     static Color urgent_unimportant_bg = new Color(252,229,205);
     static Color non_urgent_important_bg = new Color(217,234,211);
     static Color non_urgent_unimportant_bg = new Color(201,218,248);
+    static Color text_warning = new Color(240, 50, 50);
+    static Color text = new Color(0, 0, 0);
     static Color transparent = new Color(0,0,0,0);
 
 }
