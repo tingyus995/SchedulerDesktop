@@ -111,6 +111,14 @@ class TimeBlock extends Schema {
         taskIds.add(t.getID());
     }
 
+    public void addTask(Task t, int index){
+        taskIds.add(index, t.getID());
+    }
+
+    public void removeTask(Task t){
+        taskIds.remove(t.getID());
+    }
+
     public Task[] getTasks(){
         ArrayList<Task> tasks = new ArrayList<>();
         for(String id : taskIds){

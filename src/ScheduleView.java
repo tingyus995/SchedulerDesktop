@@ -159,13 +159,20 @@ class ScheduledTaskItem extends TaskItem implements Transferable, DragGestureLis
     }
 }
 
+interface TaskMoveListener{
+    void onTaskRemoved(Task t);
+    void onTaskAdded(Task t, int index);
+}
+
 class ScheduledTaskList extends JPanel{
     private DragSourceListener dragSourceListener;
     private DropTargetListener dropTargetListener;
     private DropTarget dropTarget;
+    private TaskMoveListener taskMoveListener;
     private int taskCount;
     private Point dropLocation;
     private int targetIndex;
+
     ScheduledTaskList(){
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -180,6 +187,9 @@ class ScheduledTaskList extends JPanel{
                     ScheduledTaskItem item = (ScheduledTaskItem) context.getComponent();
                     // remove from this pane
                     remove(item);
+                    if(taskMoveListener != null){
+                        taskMoveListener.onTaskRemoved(item.getTask());
+                    }
                     revalidate();
                 }
             }
@@ -224,6 +234,9 @@ class ScheduledTaskList extends JPanel{
                 try {
                     Task task = (Task) transferable.getTransferData(ScheduledTaskItem.DATA_FLAVOR);
                     addTask(task, targetIndex);
+                    if(taskMoveListener != null){
+                        taskMoveListener.onTaskAdded(task, targetIndex);
+                    }
                     event.acceptDrop(DnDConstants.ACTION_MOVE);
                     event.dropComplete(true);
 
@@ -295,7 +308,9 @@ class ScheduledTaskList extends JPanel{
         revalidate();
     }
 
-
+    public void setTaskMoveListener(TaskMoveListener taskMoveListener) {
+        this.taskMoveListener = taskMoveListener;
+    }
 }
 
 
@@ -339,6 +354,22 @@ class TimeBlockItem extends JPanel implements DropTargetListener{
         // </header>
 
         mTaskList = new ScheduledTaskList();
+        mTaskList.setTaskMoveListener(new TaskMoveListener(){
+
+            @Override
+            public void onTaskRemoved(Task t) {
+                System.out.println("Task removed!");
+                mTimeBlock.removeTask(t);
+                mTimeBlock.save();
+            }
+
+            @Override
+            public void onTaskAdded(Task t, int index) {
+                System.out.println("Task added!");
+                mTimeBlock.addTask(t, index);
+                mTimeBlock.save();
+            }
+        });
         mTaskList.setOpaque(false);
         mContent.add(mTaskList, BorderLayout.CENTER);
 
@@ -415,6 +446,9 @@ class TimeBlockItem extends JPanel implements DropTargetListener{
             event.acceptDrop(DnDConstants.ACTION_MOVE);
             event.dropComplete(true);
             setHoverByTask(false);
+            mTimeBlock.addTask(task);
+            mTimeBlock.save();
+
 
         } catch (UnsupportedFlavorException | IOException e) {
             e.printStackTrace();
