@@ -29,15 +29,15 @@ public class TaskEditController implements Controller{
         view.nameField.setText(task.getName());
         view.taskTypeSelector.setType(task.getTaskType());
         view.timeRequiredSpinner.setValue(task.getTimeRequired());
-        setDate(task.getDueTime().toLocalDate());
-        view.timeChooser.setTime(task.getDueTime().toLocalTime());
+        setDate(task.getDueDateTime().toLocalDate());
+        view.timeChooser.setTime(task.getDueDateTime().toLocalTime());
     }
 
     public Task saveTask(){
         task.setName(view.nameField.getText());
         task.setTaskType(view.taskTypeSelector.getType());
         task.setTimeRequired((int) view.timeRequiredSpinner.getValue());
-        task.setDueTime(LocalDateTime.of(date, view.timeChooser.getTime()));
+        task.setDueDateTime(LocalDateTime.of(date, view.timeChooser.getTime()));
         task.save();
 
         return task;

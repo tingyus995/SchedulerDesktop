@@ -3,6 +3,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.security.InvalidParameterException;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -91,6 +92,9 @@ class TimeBlock extends Schema {
     private LocalTime end;
     private ArrayList<String> taskIds;
 
+
+
+
     TimeBlock(LocalDate date, LocalTime begin, LocalTime end){
         int cmp = begin.compareTo(end);
         if(cmp == 0){
@@ -170,6 +174,35 @@ class TimeBlock extends Schema {
         LocalTime endTime = endDateTime.toLocalTime();
 
         return begin.compareTo(beginTime) <= 0 && end.compareTo(endTime) >= 0;
+    }
+}
+
+class SchedulingBlock{
+
+    private LocalTime preEnd = null;
+    private boolean firstTask = true;
+    private TimeBlock timeBlock;
+
+    TimeBlock getTimeBlock(){
+        return timeBlock;
+    }
+
+    SchedulingBlock(TimeBlock t){
+        timeBlock=t;
+    }
+
+    public LocalTime getPreEnd() {
+        return preEnd;
+    }
+    public void setPreEnd(LocalTime preEnd) {
+        this.preEnd = preEnd;
+    }
+
+    public boolean getFirstTask(){
+        return firstTask;
+    }
+    public void setFirstTask(boolean firstTask) {
+        this.firstTask = firstTask;
     }
 }
 

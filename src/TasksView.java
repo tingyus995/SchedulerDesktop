@@ -1,7 +1,5 @@
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
@@ -237,7 +235,7 @@ class TaskItem extends JPanel {
         nameLabel.setText(task.getName());
         timeRequiredLabel.setText(task.getTimeRequired() + " minutes");
 
-        Duration d = Duration.between(LocalDateTime.now(), task.getDueTime());
+        Duration d = Duration.between(LocalDateTime.now(), task.getDueDateTime());
         timeLeftLabel.setText(formatDuration(d) + " left");
 
     }

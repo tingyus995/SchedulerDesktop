@@ -7,7 +7,7 @@ public class TimeBlockModel {
 
     public static TimeBlock[] getAll(){
         ArrayList<TimeBlock> blocks = TimeBlock.getAll(rootDir);
-        return blocks.toArray(new TimeBlock[0]);
+        return blocks.toArray(new TimeBlock[0]); // 0 is the size
     }
 
     public static void removeAllTasks(){
